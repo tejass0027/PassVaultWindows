@@ -1,0 +1,52 @@
+<UserControl x:Class="PassVaultWindows.Views.AddEditEntryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:PassVaultWindows.Controls">
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="&#8592;" Style="{StaticResource IconButtonStyle}" Click="Back_Click" />
+                <TextBlock x:Name="TitleBarText" Grid.Column="1" Style="{StaticResource HeadlineTextStyle}" FontSize="16" VerticalAlignment="Center" Margin="8,0" />
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="24">
+                <TextBlock Text="Title (e.g. Gmail)" Margin="0,0,0,4" />
+                <TextBox x:Name="TitleBox" Height="34" Margin="0,0,0,16" />
+
+                <TextBlock Text="Username / email" Margin="0,0,0,4" />
+                <TextBox x:Name="UsernameBox" Height="34" Margin="0,0,0,16" />
+
+                <TextBlock Text="Password" Margin="0,0,0,4" />
+                <Grid Margin="0,0,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <controls:PasswordRevealBox x:Name="PasswordBox" Grid.Column="0" Height="34" />
+                    <Button Grid.Column="1" Content="Generate" Style="{StaticResource SecondaryButtonStyle}" Click="Generate_Click" Margin="4,0,0,0" />
+                </Grid>
+                <ProgressBar x:Name="StrengthBar" Height="4" Minimum="0" Maximum="6" Margin="0,4,0,2" />
+                <TextBlock x:Name="StrengthLabel" FontSize="11" Margin="0,0,0,16" />
+
+                <TextBlock Text="Website (optional)" Margin="0,0,0,4" />
+                <TextBox x:Name="UrlBox" Height="34" Margin="0,0,0,16" />
+
+                <TextBlock Text="Notes (optional)" Margin="0,0,0,4" />
+                <TextBox x:Name="NotesBox" Height="80" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Margin="0,0,0,24" />
+
+                <Button x:Name="SaveButton" Content="Save" Style="{StaticResource PrimaryButtonStyle}" Click="Save_Click" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

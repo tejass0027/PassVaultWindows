@@ -1,0 +1,8 @@
+<UserControl x:Class="PassVaultWindows.Controls.PatternLockControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Canvas x:Name="DrawCanvas" Background="Transparent"
+            MouseLeftButtonDown="DrawCanvas_MouseLeftButtonDown"
+            MouseMove="DrawCanvas_MouseMove"
+            MouseLeftButtonUp="DrawCanvas_MouseLeftButtonUp" />
+</UserControl>

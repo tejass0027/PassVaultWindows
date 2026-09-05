@@ -1,0 +1,28 @@
+<UserControl x:Class="PassVaultWindows.Views.SecurityQuestionsSetupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:PassVaultWindows.Controls">
+    <ScrollViewer Background="{DynamicResource WindowBackgroundBrush}" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="32">
+            <TextBlock Text="Security questions" Style="{StaticResource HeadlineTextStyle}" FontSize="20" />
+            <TextBlock Style="{StaticResource SecondaryTextStyle}" FontSize="14" TextWrapping="Wrap" Margin="0,8,0,24"
+                       Text="These let you get back in and reset your pattern if you ever forget it or set up on a new PC. Answers aren't shown to anyone but you." />
+
+            <TextBlock Text="Question 1" Margin="0,0,0,4" />
+            <ComboBox x:Name="Question1Combo" Margin="0,0,0,8" />
+            <controls:PasswordRevealBox x:Name="Answer1Box" Height="34" Margin="0,0,0,20" />
+
+            <TextBlock Text="Question 2" Margin="0,0,0,4" />
+            <ComboBox x:Name="Question2Combo" Margin="0,0,0,8" />
+            <controls:PasswordRevealBox x:Name="Answer2Box" Height="34" Margin="0,0,0,20" />
+
+            <TextBlock Text="Question 3" Margin="0,0,0,4" />
+            <ComboBox x:Name="Question3Combo" Margin="0,0,0,8" />
+            <controls:PasswordRevealBox x:Name="Answer3Box" Height="34" Margin="0,0,0,12" />
+
+            <TextBlock x:Name="ErrorText" Foreground="{DynamicResource ErrorBrush}" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,12" />
+
+            <Button Content="Continue" Style="{StaticResource PrimaryButtonStyle}" Click="Continue_Click" Margin="0,16,0,0" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

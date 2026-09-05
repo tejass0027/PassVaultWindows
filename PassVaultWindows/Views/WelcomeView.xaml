@@ -1,0 +1,12 @@
+<UserControl x:Class="PassVaultWindows.Views.WelcomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="380" Margin="32">
+            <TextBlock Text="PassVault" Style="{StaticResource HeadlineTextStyle}" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,16" />
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Style="{StaticResource SecondaryTextStyle}" FontSize="14"
+                       Text="Your passwords, stored only on this PC and encrypted. You'll set up a pattern lock and a couple of security questions next, and can optionally add Windows Hello unlock." />
+            <Button x:Name="GetStartedButton" Content="Get started" Style="{StaticResource PrimaryButtonStyle}" Margin="0,32,0,0" Click="GetStarted_Click" />
+        </StackPanel>
+    </Grid>
+</UserControl>

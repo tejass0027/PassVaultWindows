@@ -1,0 +1,62 @@
+<UserControl x:Class="PassVaultWindows.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="&#8592;" Style="{StaticResource IconButtonStyle}" Click="Back_Click" />
+                <TextBlock Grid.Column="1" Text="Settings" Style="{StaticResource HeadlineTextStyle}" FontSize="16" VerticalAlignment="Center" Margin="8,0" />
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="0,8">
+                <StackPanel Margin="20,12">
+                    <TextBlock Text="Theme" />
+                    <ComboBox x:Name="ThemeCombo" Margin="0,6,0,0" SelectionChanged="ThemeCombo_SelectionChanged" />
+                </StackPanel>
+                <Separator />
+
+                <Grid x:Name="HelloRow" Margin="20,12" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Windows Hello unlock" />
+                        <TextBlock Text="Require verification before your pattern" Style="{StaticResource SecondaryTextStyle}" />
+                    </StackPanel>
+                    <CheckBox x:Name="HelloCheck" Grid.Column="1" VerticalAlignment="Center" Checked="HelloCheck_Changed" Unchecked="HelloCheck_Changed" />
+                </Grid>
+                <Separator x:Name="HelloSeparator" Visibility="Collapsed" />
+
+                <StackPanel Margin="20,12">
+                    <TextBlock Text="Auto-lock" />
+                    <ComboBox x:Name="AutoLockCombo" Margin="0,6,0,0" SelectionChanged="AutoLockCombo_SelectionChanged" />
+                </StackPanel>
+                <Separator />
+
+                <Button Content="Change pattern" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="ChangePattern_Click" />
+                <Separator />
+                <Button Content="Change security questions" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="ChangeSecurityQuestions_Click" />
+                <Separator />
+                <Button Content="Export encrypted backup" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="ExportBackup_Click" />
+                <Separator />
+                <Button Content="Import backup" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="ImportBackup_Click" />
+                <Separator />
+                <Button Content="Login activity" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="LoginActivity_Click" />
+                <Separator />
+                <Button Content="Erase all data" Foreground="{DynamicResource ErrorBrush}" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="Erase_Click" />
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

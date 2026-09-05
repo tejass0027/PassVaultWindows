@@ -1,0 +1,22 @@
+<UserControl x:Class="PassVaultWindows.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:PassVaultWindows.Controls">
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="380" Margin="32">
+            <TextBlock Text="PassVault" Style="{StaticResource HeadlineTextStyle}" FontSize="24" HorizontalAlignment="Center" Margin="0,0,0,8" />
+            <TextBlock x:Name="StatusText" Style="{StaticResource SecondaryTextStyle}" FontSize="14" HorizontalAlignment="Center" TextAlignment="Center" Margin="0,0,0,24" />
+
+            <StackPanel x:Name="HelloPanel" HorizontalAlignment="Center" Visibility="Collapsed">
+                <Button Content="Retry Windows Hello" Style="{StaticResource SecondaryButtonStyle}" Click="RetryHello_Click" />
+            </StackPanel>
+
+            <StackPanel x:Name="PatternPanel" Visibility="Collapsed">
+                <controls:PatternLockControl x:Name="PatternControl" Width="280" Height="280" HorizontalAlignment="Center" />
+                <Button Content="Forgot pattern?" Style="{StaticResource SecondaryButtonStyle}" Click="ForgotPattern_Click" Margin="0,20,0,0" />
+            </StackPanel>
+
+            <ProgressBar x:Name="VerifyingProgress" IsIndeterminate="True" Width="200" Height="4" Visibility="Collapsed" Margin="0,12,0,0" />
+        </StackPanel>
+    </Grid>
+</UserControl>
