@@ -6,3 +6,4 @@
 *.userosscache
 *.sln.docstates
 Visual Studio */
+/publish/
