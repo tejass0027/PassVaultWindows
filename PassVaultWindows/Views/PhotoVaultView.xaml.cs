@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,15 +30,9 @@ public partial class PhotoVaultView : UserControl
     private async Task RefreshAsync()
     {
         var photos = _appState.PhotoVaultRepository.Photos.ToList();
-        if (photos.Count == 0)
-        {
-            EmptyText.Visibility = Visibility.Visible;
-            PhotosGrid.ItemsSource = null;
-            return;
-        }
-        EmptyText.Visibility = Visibility.Collapsed;
+        PhotosPanel.Children.Clear();
+        PhotosPanel.Children.Add(BuildAddTile());
 
-        var items = new List<PhotoItem>();
         foreach (var photo in photos)
         {
             var bytes = await _appState.PhotoVaultRepository.LoadPhotoBytesAsync(photo.Id);
@@ -47,9 +40,51 @@ public partial class PhotoVaultView : UserControl
             {
                 continue;
             }
-            items.Add(new PhotoItem(photo, DecodeImage(bytes)));
+            PhotosPanel.Children.Add(BuildPhotoTile(new PhotoItem(photo, DecodeImage(bytes))));
         }
-        PhotosGrid.ItemsSource = items;
+    }
+
+    private Border BuildAddTile()
+    {
+        var border = new Border
+        {
+            Width = 110,
+            Height = 110,
+            Margin = new Thickness(4),
+            Background = (Brush)FindResource("SurfaceVariantBrush"),
+            BorderBrush = (Brush)FindResource("OutlineBrush"),
+            BorderThickness = new Thickness(1.5),
+            CornerRadius = new CornerRadius(6),
+            Cursor = Cursors.Hand
+        };
+        border.Child = new TextBlock
+        {
+            Text = "+",
+            FontSize = 36,
+            Foreground = (Brush)FindResource("TextSecondaryBrush"),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
+        border.MouseLeftButtonUp += (sender, e) => AddPhoto_Click(sender!, e);
+        return border;
+    }
+
+    private Border BuildPhotoTile(PhotoItem item)
+    {
+        var border = new Border
+        {
+            Width = 110,
+            Height = 110,
+            Margin = new Thickness(4),
+            Background = (Brush)FindResource("SurfaceVariantBrush"),
+            CornerRadius = new CornerRadius(6),
+            ClipToBounds = true,
+            Cursor = Cursors.Hand,
+            Tag = item
+        };
+        border.Child = new Image { Source = item.Thumbnail, Stretch = Stretch.UniformToFill };
+        border.MouseLeftButtonUp += Thumbnail_MouseLeftButtonUp;
+        return border;
     }
 
     private static BitmapImage DecodeImage(byte[] bytes)

@@ -24,24 +24,8 @@
         <ProgressBar x:Name="LoadingBar" Grid.Row="1" IsIndeterminate="True" Height="3" Visibility="Collapsed" />
 
         <Grid Grid.Row="2">
-            <TextBlock x:Name="EmptyText" Style="{StaticResource SecondaryTextStyle}" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="32"
-                       Text="No photos yet. Tap the camera icon to add one." Visibility="Collapsed" />
             <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="PhotosGrid" Margin="8">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Width="110" Height="110" Margin="4" Background="{DynamicResource SurfaceVariantBrush}" CornerRadius="6" ClipToBounds="True"
-                                    MouseLeftButtonUp="Thumbnail_MouseLeftButtonUp" Tag="{Binding}" Cursor="Hand">
-                                <Image Source="{Binding Thumbnail}" Stretch="UniformToFill" />
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                <WrapPanel x:Name="PhotosPanel" Orientation="Horizontal" Margin="8" />
             </ScrollViewer>
         </Grid>
     </Grid>
