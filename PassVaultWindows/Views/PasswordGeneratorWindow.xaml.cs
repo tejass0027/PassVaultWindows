@@ -23,7 +23,7 @@ public partial class PasswordGeneratorWindow : Window
 
     private void Regenerate()
     {
-        if (LengthText == null || GeneratedText == null)
+        if (LengthText == null || GeneratedText == null || UpperCheck == null || DigitsCheck == null || SymbolsCheck == null)
         {
             return;
         }
