@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using PassVaultWindows.Data;
 
 namespace PassVaultWindows.Views;
@@ -94,10 +93,11 @@ public partial class VaultListView : UserControl
         RefreshList();
     }
 
-    private void CredentialsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    private void CredentialsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         if (CredentialsList.SelectedItem is CredentialListItem item)
         {
+            CredentialsList.SelectedItem = null;
             _onOpenEntry(item.Credential);
         }
     }

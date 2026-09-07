@@ -46,7 +46,7 @@
 
         <Grid Grid.Row="3">
             <TextBlock x:Name="EmptyText" Style="{StaticResource SecondaryTextStyle}" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="32" Visibility="Collapsed" />
-            <ListBox x:Name="CredentialsList" BorderThickness="0" Background="Transparent" MouseDoubleClick="CredentialsList_MouseDoubleClick">
+            <ListBox x:Name="CredentialsList" BorderThickness="0" Background="Transparent" SelectionChanged="CredentialsList_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Margin="8,6">
