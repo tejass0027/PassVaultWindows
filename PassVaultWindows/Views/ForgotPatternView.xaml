@@ -12,11 +12,11 @@
             <StackPanel Margin="32">
                 <TextBlock Text="Answer your security questions" Style="{StaticResource HeadlineTextStyle}" FontSize="20" Margin="0,0,0,20" />
                 <TextBlock x:Name="Question1Label" Margin="0,0,0,4" />
-                <controls:PasswordRevealBox x:Name="Answer1Box" Height="34" Margin="0,0,0,16" />
+                <controls:PasswordRevealBox x:Name="Answer1Box" Margin="0,0,0,16" />
                 <TextBlock x:Name="Question2Label" Margin="0,0,0,4" />
-                <controls:PasswordRevealBox x:Name="Answer2Box" Height="34" Margin="0,0,0,16" />
+                <controls:PasswordRevealBox x:Name="Answer2Box" Margin="0,0,0,16" />
                 <TextBlock x:Name="Question3Label" Margin="0,0,0,4" />
-                <controls:PasswordRevealBox x:Name="Answer3Box" Height="34" Margin="0,0,0,16" />
+                <controls:PasswordRevealBox x:Name="Answer3Box" Margin="0,0,0,16" />
                 <TextBlock x:Name="AnswersErrorText" Foreground="{DynamicResource ErrorBrush}" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,12" />
                 <Button x:Name="ContinueButton" Content="Continue" Style="{StaticResource PrimaryButtonStyle}" Click="Continue_Click" />
                 <Button Content="Cancel" Style="{StaticResource SecondaryButtonStyle}" Click="Cancel_Click" Margin="0,8,0,0" />

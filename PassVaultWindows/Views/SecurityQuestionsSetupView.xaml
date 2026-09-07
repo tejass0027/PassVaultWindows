@@ -10,15 +10,15 @@
 
             <TextBlock Text="Question 1" Margin="0,0,0,4" />
             <ComboBox x:Name="Question1Combo" Margin="0,0,0,8" />
-            <controls:PasswordRevealBox x:Name="Answer1Box" Height="34" Margin="0,0,0,20" />
+            <controls:PasswordRevealBox x:Name="Answer1Box" Margin="0,0,0,20" />
 
             <TextBlock Text="Question 2" Margin="0,0,0,4" />
             <ComboBox x:Name="Question2Combo" Margin="0,0,0,8" />
-            <controls:PasswordRevealBox x:Name="Answer2Box" Height="34" Margin="0,0,0,20" />
+            <controls:PasswordRevealBox x:Name="Answer2Box" Margin="0,0,0,20" />
 
             <TextBlock Text="Question 3" Margin="0,0,0,4" />
             <ComboBox x:Name="Question3Combo" Margin="0,0,0,8" />
-            <controls:PasswordRevealBox x:Name="Answer3Box" Height="34" Margin="0,0,0,12" />
+            <controls:PasswordRevealBox x:Name="Answer3Box" Margin="0,0,0,12" />
 
             <TextBlock x:Name="ErrorText" Foreground="{DynamicResource ErrorBrush}" TextWrapping="Wrap" Visibility="Collapsed" Margin="0,0,0,12" />
 

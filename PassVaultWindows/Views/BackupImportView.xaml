@@ -9,7 +9,7 @@
                        Text="Enter the password you set when this backup was created, then choose the file. This also works with a backup exported from the Android app." />
 
             <TextBlock Text="Backup password" Margin="0,0,0,4" />
-            <controls:PasswordRevealBox x:Name="PasswordBox" Height="34" Margin="0,0,0,16" />
+            <controls:PasswordRevealBox x:Name="PasswordBox" Margin="0,0,0,16" />
 
             <TextBlock x:Name="ErrorText" Foreground="{DynamicResource ErrorBrush}" TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" Margin="0,0,0,12" />
 

@@ -9,9 +9,9 @@
                        Text="Choose a password for this backup file. You'll need it to restore the backup later, so don't lose it - it's separate from your pattern." />
 
             <TextBlock Text="Backup password" Margin="0,0,0,4" />
-            <controls:PasswordRevealBox x:Name="PasswordBox" Height="34" Margin="0,0,0,12" />
+            <controls:PasswordRevealBox x:Name="PasswordBox" Margin="0,0,0,12" />
             <TextBlock Text="Confirm password" Margin="0,0,0,4" />
-            <controls:PasswordRevealBox x:Name="ConfirmPasswordBox" Height="34" Margin="0,0,0,16" />
+            <controls:PasswordRevealBox x:Name="ConfirmPasswordBox" Margin="0,0,0,16" />
 
             <TextBlock x:Name="ErrorText" Foreground="{DynamicResource ErrorBrush}" TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" Margin="0,0,0,12" />
             <TextBlock x:Name="StatusText" Foreground="{DynamicResource PrimaryBrush}" TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" Margin="0,0,0,12" />
