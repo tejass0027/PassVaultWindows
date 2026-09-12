@@ -1,0 +1,56 @@
+<UserControl x:Class="PassVaultWindows.Views.HiddenNotesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="{DynamicResource WindowBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="&#128274;" Style="{StaticResource IconButtonStyle}" Click="Lock_Click" ToolTip="Lock" />
+                <TextBlock x:Name="TitleBarText" Grid.Column="1" Text="Secret notes" Style="{StaticResource HeadlineTextStyle}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Button x:Name="AddButton" Grid.Column="2" Content="&#10133;" Style="{StaticResource IconButtonStyle}" Click="Add_Click" ToolTip="Add note" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <StackPanel x:Name="ListPanel">
+                <TextBlock x:Name="EmptyText" Style="{StaticResource SecondaryTextStyle}" FontSize="14" TextWrapping="Wrap" TextAlignment="Center" HorizontalAlignment="Center" Margin="32" Visibility="Collapsed"
+                           Text="Nothing here yet. Tap + to add a secret note." />
+                <ListBox x:Name="NotesList" BorderThickness="0" Background="Transparent" SelectionChanged="NotesList_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="8,6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding Title}" FontSize="14" />
+                                    <TextBlock Text="{Binding Preview}" Style="{StaticResource SecondaryTextStyle}" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="&#128465;" Style="{StaticResource IconButtonStyle}" Click="DeleteNote_Click" Tag="{Binding}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+
+            <StackPanel x:Name="EditorPanel" Margin="24" Visibility="Collapsed">
+                <TextBlock Text="Title" Margin="0,0,0,4" />
+                <TextBox x:Name="EditTitleBox" Height="34" Margin="0,0,0,16" />
+                <TextBlock Text="Secret" Margin="0,0,0,4" />
+                <TextBox x:Name="EditContentBox" Height="240" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Margin="0,0,0,16" />
+                <Button Content="Save" Style="{StaticResource PrimaryButtonStyle}" Click="SaveNote_Click" Margin="0,0,0,8" />
+                <Button Content="Cancel" Style="{StaticResource SecondaryButtonStyle}" Click="CancelEdit_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

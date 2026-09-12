@@ -11,14 +11,16 @@ public partial class LoginView : UserControl
     private readonly AppState _appState;
     private readonly Action _onLoginSuccess;
     private readonly Action _onForgotPattern;
+    private readonly Action _onHiddenVaultUnlocked;
     private bool _isVerifyingPattern;
 
-    public LoginView(AppState appState, Action onLoginSuccess, Action onForgotPattern)
+    public LoginView(AppState appState, Action onLoginSuccess, Action onForgotPattern, Action onHiddenVaultUnlocked)
     {
         InitializeComponent();
         _appState = appState;
         _onLoginSuccess = onLoginSuccess;
         _onForgotPattern = onForgotPattern;
+        _onHiddenVaultUnlocked = onHiddenVaultUnlocked;
         PatternControl.PatternCompleted += OnPatternCompleted;
 
         _ = StartAsync();
@@ -77,21 +79,25 @@ public partial class LoginView : UserControl
         PatternPanel.Visibility = Visibility.Collapsed;
         VerifyingProgress.Visibility = Visibility.Visible;
 
-        bool success = await _appState.TryLoginWithPatternAsync(pattern);
+        var result = await _appState.AttemptPatternLoginAsync(pattern);
 
         VerifyingProgress.Visibility = Visibility.Collapsed;
         _isVerifyingPattern = false;
-        if (success)
+        switch (result)
         {
-            _onLoginSuccess();
-        }
-        else
-        {
-            StatusText.Text = "Wrong pattern, try again";
-            PatternPanel.Visibility = Visibility.Visible;
-            PatternControl.ShowError = true;
-            await Task.Delay(500);
-            PatternControl.ShowError = false;
+            case AppState.PatternLoginResult.MainVault:
+                _onLoginSuccess();
+                break;
+            case AppState.PatternLoginResult.HiddenVault:
+                _onHiddenVaultUnlocked();
+                break;
+            default:
+                StatusText.Text = "Wrong pattern, try again";
+                PatternPanel.Visibility = Visibility.Visible;
+                PatternControl.ShowError = true;
+                await Task.Delay(500);
+                PatternControl.ShowError = false;
+                break;
         }
     }
 

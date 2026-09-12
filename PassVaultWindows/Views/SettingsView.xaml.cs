@@ -16,6 +16,7 @@ public partial class SettingsView : UserControl
     private readonly Action _onExportBackup;
     private readonly Action _onImportBackup;
     private readonly Action _onOpenLoginActivity;
+    private readonly Action _onSetUpHiddenVault;
     private readonly Action _onErased;
 
     private readonly List<ThemeOption> _themeOptions = new()
@@ -43,6 +44,7 @@ public partial class SettingsView : UserControl
         Action onExportBackup,
         Action onImportBackup,
         Action onOpenLoginActivity,
+        Action onSetUpHiddenVault,
         Action onErased)
     {
         InitializeComponent();
@@ -53,7 +55,10 @@ public partial class SettingsView : UserControl
         _onExportBackup = onExportBackup;
         _onImportBackup = onImportBackup;
         _onOpenLoginActivity = onOpenLoginActivity;
+        _onSetUpHiddenVault = onSetUpHiddenVault;
         _onErased = onErased;
+
+        RefreshHiddenVaultUi();
 
         ThemeCombo.ItemsSource = _themeOptions;
         ThemeCombo.SelectedIndex = Math.Max(0, _themeOptions.FindIndex(o => o.Mode == _appState.CurrentThemeMode()));
@@ -114,6 +119,30 @@ public partial class SettingsView : UserControl
     private void ImportBackup_Click(object sender, RoutedEventArgs e) => _onImportBackup();
 
     private void LoginActivity_Click(object sender, RoutedEventArgs e) => _onOpenLoginActivity();
+
+    private void RefreshHiddenVaultUi()
+    {
+        HiddenVaultButtonText.Text = _appState.HasHiddenVault ? "Change hidden vault pattern" : "Set up hidden vault";
+        var visibility = _appState.HasHiddenVault ? Visibility.Visible : Visibility.Collapsed;
+        RemoveHiddenVaultButton.Visibility = visibility;
+        RemoveHiddenVaultSeparator.Visibility = visibility;
+    }
+
+    private void HiddenVault_Click(object sender, RoutedEventArgs e) => _onSetUpHiddenVault();
+
+    private void RemoveHiddenVault_Click(object sender, RoutedEventArgs e)
+    {
+        var result = MessageBox.Show(
+            "This permanently deletes everything in it and turns off its pattern. This cannot be undone.",
+            "Remove hidden vault?",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+        if (result == MessageBoxResult.Yes)
+        {
+            _appState.RemoveHiddenVault();
+            RefreshHiddenVaultUi();
+        }
+    }
 
     private void Erase_Click(object sender, RoutedEventArgs e)
     {

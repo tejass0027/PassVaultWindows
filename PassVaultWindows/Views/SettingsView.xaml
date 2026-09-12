@@ -55,6 +55,18 @@
                 <Separator />
                 <Button Content="Login activity" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="LoginActivity_Click" />
                 <Separator />
+
+                <Button Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="HiddenVault_Click">
+                    <StackPanel>
+                        <TextBlock x:Name="HiddenVaultButtonText" />
+                        <TextBlock Text="A second pattern that opens a separate, private notes vault only you know about" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                    </StackPanel>
+                </Button>
+                <Separator />
+
+                <Button x:Name="RemoveHiddenVaultButton" Content="Remove hidden vault" Foreground="{DynamicResource ErrorBrush}" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="RemoveHiddenVault_Click" Visibility="Collapsed" />
+                <Separator x:Name="RemoveHiddenVaultSeparator" Visibility="Collapsed" />
+
                 <Button Content="Erase all data" Foreground="{DynamicResource ErrorBrush}" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="Erase_Click" />
             </StackPanel>
         </ScrollViewer>

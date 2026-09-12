@@ -24,6 +24,8 @@ public class AppState
     public WindowsHelloAuthManager WindowsHello { get; }
     public VaultRepository VaultRepository { get; }
     public PhotoVaultRepository PhotoVaultRepository { get; }
+    public HiddenVaultAuthManager HiddenVaultAuth { get; }
+    public HiddenNotesRepository HiddenNotesRepository { get; }
 
     public event Action<bool>? IsUnlockedChanged;
     private bool _isUnlocked;
@@ -32,6 +34,16 @@ public class AppState
         get => _isUnlocked;
         private set { _isUnlocked = value; IsUnlockedChanged?.Invoke(value); }
     }
+
+    public event Action<bool>? IsHiddenVaultUnlockedChanged;
+    private bool _isHiddenVaultUnlocked;
+    public bool IsHiddenVaultUnlocked
+    {
+        get => _isHiddenVaultUnlocked;
+        private set { _isHiddenVaultUnlocked = value; IsHiddenVaultUnlockedChanged?.Invoke(value); }
+    }
+
+    public bool HasHiddenVault => HiddenVaultAuth.HasHiddenVault();
 
     public event Action<int>? FailedAttemptsSinceLastLoginChanged;
     private int _failedAttemptsSinceLastLogin;
@@ -59,6 +71,8 @@ public class AppState
         WindowsHello = new WindowsHelloAuthManager();
         VaultRepository = new VaultRepository(appDataDir);
         PhotoVaultRepository = new PhotoVaultRepository(appDataDir);
+        HiddenVaultAuth = new HiddenVaultAuthManager(AuthPrefs);
+        HiddenNotesRepository = new HiddenNotesRepository(appDataDir);
 
         ApplyTheme(CurrentThemeMode());
     }
@@ -98,21 +112,91 @@ public class AppState
 
     // --- Login ---
 
-    /// <summary>Returns true if <paramref name="pattern"/> was correct and the vault is now unlocked.</summary>
-    public async Task<bool> TryLoginWithPatternAsync(List<int> pattern)
+    public enum PatternLoginResult { MainVault, HiddenVault, WrongPattern }
+
+    /// <summary>
+    /// Tries <paramref name="pattern"/> against the main vault first, then - only if that fails -
+    /// against the hidden vault, so a correct hidden-vault pattern is never mistakenly logged as
+    /// a failed main-vault attempt. A pattern that matches neither is recorded as one failed
+    /// attempt on the main login activity log, same as before; a correct hidden-vault pattern is
+    /// recorded nowhere at all, keeping the hidden vault's existence invisible even in that log.
+    /// </summary>
+    public async Task<PatternLoginResult> AttemptPatternLoginAsync(List<int> pattern)
     {
-        var dek = await Task.Run(() => PatternAuth.TryUnlock(pattern));
+        var mainDek = await Task.Run(() => PatternAuth.TryUnlock(pattern));
+        if (mainDek != null)
+        {
+            FailedAttemptsSinceLastLogin = FailedAttemptsSinceLastRecordedSuccess();
+            AuthPrefs.RecordLoginEvent(LoginEventType.Pattern, success: true);
+            await VaultRepository.UnlockAsync(mainDek);
+            await PhotoVaultRepository.UnlockAsync(mainDek);
+            IsUnlocked = true;
+            return PatternLoginResult.MainVault;
+        }
+
+        var hiddenDek = await Task.Run(() => HiddenVaultAuth.TryUnlock(pattern));
+        if (hiddenDek != null)
+        {
+            await HiddenNotesRepository.UnlockAsync(hiddenDek);
+            IsHiddenVaultUnlocked = true;
+            return PatternLoginResult.HiddenVault;
+        }
+
+        AuthPrefs.RecordLoginEvent(LoginEventType.Pattern, success: false);
+        return PatternLoginResult.WrongPattern;
+    }
+
+    public void LockHiddenVault()
+    {
+        HiddenNotesRepository.Lock();
+        IsHiddenVaultUnlocked = false;
+    }
+
+    // Holds the hidden vault's DEK transiently while changing its pattern from Settings (which
+    // runs inside the *main* vault's session, so the hidden vault isn't otherwise unlocked).
+    // Wiped as soon as the new pattern is set, same lifecycle as the onboarding DEK.
+    private byte[]? _pendingHiddenVaultDek;
+
+    /// <summary>
+    /// Verifies the hidden vault's *current* pattern before letting it be changed, since Settings
+    /// doesn't have the hidden vault's DEK otherwise - without this, "changing" the pattern would
+    /// silently generate a brand new DEK and orphan every existing hidden note under the old one.
+    /// </summary>
+    public async Task<bool> BeginHiddenVaultPatternChangeAsync(List<int> currentPattern)
+    {
+        var dek = await Task.Run(() => HiddenVaultAuth.TryUnlock(currentPattern));
         if (dek == null)
         {
-            AuthPrefs.RecordLoginEvent(LoginEventType.Pattern, success: false);
             return false;
         }
-        FailedAttemptsSinceLastLogin = FailedAttemptsSinceLastRecordedSuccess();
-        AuthPrefs.RecordLoginEvent(LoginEventType.Pattern, success: true);
-        await VaultRepository.UnlockAsync(dek);
-        await PhotoVaultRepository.UnlockAsync(dek);
-        IsUnlocked = true;
+        _pendingHiddenVaultDek = dek;
         return true;
+    }
+
+    /// <summary>
+    /// Sets up (first time) or finishes changing (after <see cref="BeginHiddenVaultPatternChangeAsync"/>)
+    /// the hidden vault's pattern. Rejects a pattern identical to the main login pattern, since
+    /// the two must be distinguishable to know which vault to open.
+    /// </summary>
+    public async Task<bool> SetupHiddenVaultAsync(List<int> pattern)
+    {
+        var collidesWithMainPattern = await Task.Run(() => PatternAuth.TryUnlock(pattern) != null);
+        if (collidesWithMainPattern)
+        {
+            return false;
+        }
+
+        var dek = _pendingHiddenVaultDek ?? CryptoManager.GenerateRandomKey();
+        _pendingHiddenVaultDek = null;
+        await Task.Run(() => HiddenVaultAuth.SetPattern(pattern, dek));
+        return true;
+    }
+
+    public void RemoveHiddenVault()
+    {
+        LockHiddenVault();
+        AuthPrefs.ClearHiddenVault();
+        HiddenNotesRepository.DeleteVaultFile();
     }
 
     public async Task<bool> VerifySecurityAnswersAsync(List<string> answers) =>

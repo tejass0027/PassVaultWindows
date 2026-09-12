@@ -71,6 +71,28 @@ public class AuthPrefs
     public byte[]? SecurityWrappedDek() => _data.SecurityWrappedDek is null ? null : Convert.FromBase64String(_data.SecurityWrappedDek);
     public List<string> SecurityQuestions() => _data.SecurityQuestions;
 
+    /// <summary>
+    /// A second, separate pattern that unlocks a hidden notes vault with its own DEK - entirely
+    /// independent of the main vault. Drawing this pattern on the login screen (instead of the
+    /// main one) is the only way to reach it; there is no menu entry that reveals its contents.
+    /// </summary>
+    public void SaveHiddenPatternWrap(byte[] salt, byte[] wrappedDek)
+    {
+        _data.HiddenPatternSalt = Convert.ToBase64String(salt);
+        _data.HiddenPatternWrappedDek = Convert.ToBase64String(wrappedDek);
+        Save();
+    }
+
+    public byte[]? HiddenPatternSalt() => _data.HiddenPatternSalt is null ? null : Convert.FromBase64String(_data.HiddenPatternSalt);
+    public byte[]? HiddenPatternWrappedDek() => _data.HiddenPatternWrappedDek is null ? null : Convert.FromBase64String(_data.HiddenPatternWrappedDek);
+
+    public void ClearHiddenVault()
+    {
+        _data.HiddenPatternSalt = null;
+        _data.HiddenPatternWrappedDek = null;
+        Save();
+    }
+
     public void RecordLoginEvent(LoginEventType type, bool success)
     {
         _data.LoginEvents.Insert(0, new LoginEvent
@@ -131,6 +153,8 @@ public class AuthPrefs
         public string? SecuritySalt { get; set; }
         public string? SecurityWrappedDek { get; set; }
         public List<string> SecurityQuestions { get; set; } = new();
+        public string? HiddenPatternSalt { get; set; }
+        public string? HiddenPatternWrappedDek { get; set; }
         public List<LoginEvent> LoginEvents { get; set; } = new();
     }
 }
