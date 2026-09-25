@@ -59,7 +59,7 @@
                 <Button Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="20,14" Click="HiddenVault_Click">
                     <StackPanel>
                         <TextBlock x:Name="HiddenVaultButtonText" />
-                        <TextBlock Text="A second pattern that opens a separate, private notes vault only you know about" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" Margin="0,2,0,0" />
+                        <TextBlock Text="A second pattern that opens a separate private vault for secret passwords, photos and notes" Style="{StaticResource SecondaryTextStyle}" TextWrapping="Wrap" Margin="0,2,0,0" />
                     </StackPanel>
                 </Button>
                 <Separator />

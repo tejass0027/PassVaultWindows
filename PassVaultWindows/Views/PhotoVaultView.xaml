@@ -16,7 +16,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" Content="&#8592;" Style="{StaticResource IconButtonStyle}" Click="Back_Click" />
-                <TextBlock Grid.Column="1" Text="Photo vault" Style="{StaticResource HeadlineTextStyle}" FontSize="16" VerticalAlignment="Center" Margin="8,0" />
+                <TextBlock x:Name="TitleBarText" Grid.Column="1" Text="Photo vault" Style="{StaticResource HeadlineTextStyle}" FontSize="16" VerticalAlignment="Center" Margin="8,0" />
                 <Button Grid.Column="2" Content="&#128247;" Style="{StaticResource IconButtonStyle}" Click="AddPhoto_Click" ToolTip="Add photo" />
             </Grid>
         </Border>

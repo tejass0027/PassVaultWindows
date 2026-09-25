@@ -26,6 +26,8 @@ public class AppState
     public PhotoVaultRepository PhotoVaultRepository { get; }
     public HiddenVaultAuthManager HiddenVaultAuth { get; }
     public HiddenNotesRepository HiddenNotesRepository { get; }
+    public VaultRepository HiddenVaultRepository { get; }
+    public PhotoVaultRepository HiddenPhotoVaultRepository { get; }
 
     public event Action<bool>? IsUnlockedChanged;
     private bool _isUnlocked;
@@ -73,6 +75,8 @@ public class AppState
         PhotoVaultRepository = new PhotoVaultRepository(appDataDir);
         HiddenVaultAuth = new HiddenVaultAuthManager(AuthPrefs);
         HiddenNotesRepository = new HiddenNotesRepository(appDataDir);
+        HiddenVaultRepository = new VaultRepository(appDataDir, "hidden_vault.dat");
+        HiddenPhotoVaultRepository = new PhotoVaultRepository(appDataDir, "hidden_photos_index.dat", "hidden_photos");
 
         ApplyTheme(CurrentThemeMode());
     }
@@ -138,6 +142,8 @@ public class AppState
         if (hiddenDek != null)
         {
             await HiddenNotesRepository.UnlockAsync(hiddenDek);
+            await HiddenVaultRepository.UnlockAsync(hiddenDek);
+            await HiddenPhotoVaultRepository.UnlockAsync(hiddenDek);
             IsHiddenVaultUnlocked = true;
             return PatternLoginResult.HiddenVault;
         }
@@ -148,6 +154,8 @@ public class AppState
 
     public void LockHiddenVault()
     {
+        HiddenPhotoVaultRepository.Lock();
+        HiddenVaultRepository.Lock();
         HiddenNotesRepository.Lock();
         IsHiddenVaultUnlocked = false;
     }
@@ -197,6 +205,8 @@ public class AppState
         LockHiddenVault();
         AuthPrefs.ClearHiddenVault();
         HiddenNotesRepository.DeleteVaultFile();
+        HiddenVaultRepository.DeleteVaultFile();
+        HiddenPhotoVaultRepository.DeleteAll();
     }
 
     public async Task<bool> VerifySecurityAnswersAsync(List<string> answers) =>

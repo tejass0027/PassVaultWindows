@@ -15,27 +15,30 @@ namespace PassVaultWindows.Views;
 public partial class PhotoVaultView : UserControl
 {
     private readonly AppState _appState;
+    private readonly PhotoVaultRepository _photos;
     private readonly Action _onBack;
 
-    public PhotoVaultView(AppState appState, Action onBack)
+    public PhotoVaultView(AppState appState, Action onBack, PhotoVaultRepository? repository = null, string title = "Photo vault")
     {
         InitializeComponent();
         _appState = appState;
+        _photos = repository ?? appState.PhotoVaultRepository;
         _onBack = onBack;
+        TitleBarText.Text = title;
 
-        _appState.PhotoVaultRepository.PhotosChanged += () => _ = RefreshAsync();
+        _photos.PhotosChanged += () => _ = RefreshAsync();
         _ = RefreshAsync();
     }
 
     private async Task RefreshAsync()
     {
-        var photos = _appState.PhotoVaultRepository.Photos.ToList();
+        var photos = _photos.Photos.ToList();
         PhotosPanel.Children.Clear();
         PhotosPanel.Children.Add(BuildAddTile());
 
         foreach (var photo in photos)
         {
-            var bytes = await _appState.PhotoVaultRepository.LoadPhotoBytesAsync(photo.Id);
+            var bytes = await _photos.LoadPhotoBytesAsync(photo.Id);
             if (bytes == null)
             {
                 continue;
@@ -114,7 +117,7 @@ public partial class PhotoVaultView : UserControl
         try
         {
             var bytes = await Task.Run(() => File.ReadAllBytes(dialog.FileName));
-            await _appState.PhotoVaultRepository.AddPhotoAsync("", bytes);
+            await _photos.AddPhotoAsync("", bytes);
         }
         catch (Exception ex)
         {
@@ -156,7 +159,7 @@ public partial class PhotoVaultView : UserControl
         deleteButton.Click += async (_, _) =>
         {
             window.Close();
-            await _appState.PhotoVaultRepository.DeletePhotoAsync(item.Photo.Id);
+            await _photos.DeletePhotoAsync(item.Photo.Id);
         };
         buttonRow.Children.Add(closeButton);
         buttonRow.Children.Add(deleteButton);

@@ -22,10 +22,10 @@ public class PhotoVaultRepository
     public event Action? PhotosChanged;
     public List<VaultPhoto> Photos { get; private set; } = new();
 
-    public PhotoVaultRepository(string appDataDir)
+    public PhotoVaultRepository(string appDataDir, string indexFileName = "photos_index.dat", string photosDirName = "photos")
     {
-        _indexFilePath = Path.Combine(appDataDir, "photos_index.dat");
-        _photosDir = Path.Combine(appDataDir, "photos");
+        _indexFilePath = Path.Combine(appDataDir, indexFileName);
+        _photosDir = Path.Combine(appDataDir, photosDirName);
         Directory.CreateDirectory(_photosDir);
     }
 

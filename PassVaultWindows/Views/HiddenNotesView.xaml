@@ -14,7 +14,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="&#128274;" Style="{StaticResource IconButtonStyle}" Click="Lock_Click" ToolTip="Lock" />
+                <Button Grid.Column="0" Content="&#8592;" Style="{StaticResource IconButtonStyle}" Click="Lock_Click" ToolTip="Back" />
                 <TextBlock x:Name="TitleBarText" Grid.Column="1" Text="Secret notes" Style="{StaticResource HeadlineTextStyle}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Button x:Name="AddButton" Grid.Column="2" Content="&#10133;" Style="{StaticResource IconButtonStyle}" Click="Add_Click" ToolTip="Add note" />
             </Grid>

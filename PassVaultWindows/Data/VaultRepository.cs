@@ -25,9 +25,9 @@ public class VaultRepository
 
     public bool IsUnlocked => _dek != null;
 
-    public VaultRepository(string appDataDir)
+    public VaultRepository(string appDataDir, string fileName = "vault.dat")
     {
-        _vaultFilePath = Path.Combine(appDataDir, "vault.dat");
+        _vaultFilePath = Path.Combine(appDataDir, fileName);
     }
 
     public async Task UnlockAsync(byte[] dek)
