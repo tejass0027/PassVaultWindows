@@ -15,6 +15,8 @@ public partial class VaultListView : UserControl
     private readonly Action _onOpenPhotoVault;
     private readonly Action _onViewLoginActivity;
     private readonly Action _onLock;
+    private readonly bool _hidden;
+    private readonly Action? _onOpenNotes;
 
     public VaultListView(
         AppState appState,
@@ -23,7 +25,9 @@ public partial class VaultListView : UserControl
         Action onOpenSettings,
         Action onOpenPhotoVault,
         Action onViewLoginActivity,
-        Action onLock)
+        Action onLock,
+        bool hidden = false,
+        Action? onOpenNotes = null)
     {
         InitializeComponent();
         _appState = appState;
@@ -33,17 +37,29 @@ public partial class VaultListView : UserControl
         _onOpenPhotoVault = onOpenPhotoVault;
         _onViewLoginActivity = onViewLoginActivity;
         _onLock = onLock;
+        _hidden = hidden;
+        _onOpenNotes = onOpenNotes;
 
-        _appState.VaultRepository.CredentialsChanged += RefreshList;
+        // The hidden vault reuses this exact screen, fed from its own store, with a Notes
+        // button where Settings would be.
+        if (_hidden)
+        {
+            SettingsButton.Content = "📝";
+            SettingsButton.ToolTip = "Notes";
+        }
+
+        Repository.CredentialsChanged += RefreshList;
         _appState.FailedAttemptsSinceLastLoginChanged += _ => RefreshBanner();
 
         RefreshBanner();
         RefreshList();
     }
 
+    private VaultRepository Repository => _hidden ? _appState.HiddenVaultRepository : _appState.VaultRepository;
+
     private void RefreshBanner()
     {
-        int count = _appState.FailedAttemptsSinceLastLogin;
+        int count = _hidden ? 0 : _appState.FailedAttemptsSinceLastLogin;
         if (count <= 0)
         {
             BannerBorder.Visibility = Visibility.Collapsed;
@@ -65,7 +81,7 @@ public partial class VaultListView : UserControl
     private void RefreshList()
     {
         var query = SearchBox.Text?.Trim() ?? "";
-        var all = _appState.VaultRepository.Credentials;
+        var all = Repository.Credentials;
         var filtered = all
             .Where(c => string.IsNullOrEmpty(query) ||
                         c.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
@@ -104,7 +120,17 @@ public partial class VaultListView : UserControl
 
     private void Add_Click(object sender, RoutedEventArgs e) => _onAddEntry();
 
-    private void Settings_Click(object sender, RoutedEventArgs e) => _onOpenSettings();
+    private void Settings_Click(object sender, RoutedEventArgs e)
+    {
+        if (_hidden)
+        {
+            _onOpenNotes?.Invoke();
+        }
+        else
+        {
+            _onOpenSettings();
+        }
+    }
 
     private void PhotoVault_Click(object sender, RoutedEventArgs e) => _onOpenPhotoVault();
 

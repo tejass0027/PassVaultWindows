@@ -13,12 +13,12 @@ public partial class MainWindow : Window
         Welcome, CreatePattern, SecurityQuestionsSetup, BiometricOptIn, Login, ForgotPattern,
         VaultList, EntryDetail, AddEditEntry, Settings, ChangePattern, ManageSecurityQuestions,
         BackupExport, BackupImport, LoginActivity, PhotoVault, HiddenVaultSetup,
-        HiddenHub, HiddenPasswords, HiddenEntryDetail, HiddenAddEdit, HiddenPhotos, HiddenNotes
+        HiddenHub, HiddenEntryDetail, HiddenAddEdit, HiddenPhotos, HiddenNotes
     }
 
     private static readonly HashSet<AppRoute> HiddenRoutes = new()
     {
-        AppRoute.HiddenHub, AppRoute.HiddenPasswords, AppRoute.HiddenEntryDetail,
+        AppRoute.HiddenHub, AppRoute.HiddenEntryDetail,
         AppRoute.HiddenAddEdit, AppRoute.HiddenPhotos, AppRoute.HiddenNotes
     };
 
@@ -174,24 +174,24 @@ public partial class MainWindow : Window
 
     public void ShowHiddenVaultSetup() => Navigate(AppRoute.HiddenVaultSetup, new HiddenVaultSetupView(_appState, ShowSettings, ShowSettings));
 
-    public void ShowHiddenHub() => Navigate(AppRoute.HiddenHub, new HiddenVaultHubView(
-        onOpenPasswords: ShowHiddenPasswords,
-        onOpenPhotos: ShowHiddenPhotos,
-        onOpenNotes: ShowHiddenNotes,
-        onLock: () => _appState.LockHiddenVault()));
-
-    public void ShowHiddenPasswords() => Navigate(AppRoute.HiddenPasswords, new HiddenPasswordsView(
+    // Same screen as the main vault, fed from the hidden vault's own store.
+    public void ShowHiddenHub() => Navigate(AppRoute.HiddenHub, new VaultListView(
         _appState,
-        onAdd: () => ShowHiddenAddEdit(null),
-        onOpen: ShowHiddenEntryDetail,
-        onBack: ShowHiddenHub));
+        onAddEntry: () => ShowHiddenAddEdit(null),
+        onOpenEntry: ShowHiddenEntryDetail,
+        onOpenSettings: () => { },
+        onOpenPhotoVault: ShowHiddenPhotos,
+        onViewLoginActivity: () => { },
+        onLock: () => _appState.LockHiddenVault(),
+        hidden: true,
+        onOpenNotes: ShowHiddenNotes));
 
     public void ShowHiddenEntryDetail(Credential credential) => Navigate(AppRoute.HiddenEntryDetail, new EntryDetailView(
         _appState,
         credential,
-        onBack: ShowHiddenPasswords,
+        onBack: ShowHiddenHub,
         onEdit: () => ShowHiddenAddEdit(credential),
-        onDeleted: ShowHiddenPasswords,
+        onDeleted: ShowHiddenHub,
         repository: _appState.HiddenVaultRepository));
 
     public void ShowHiddenAddEdit(Credential? existing) => Navigate(AppRoute.HiddenAddEdit, new AddEditEntryView(
@@ -199,12 +199,12 @@ public partial class MainWindow : Window
         onSave: async credential =>
         {
             await _appState.HiddenVaultRepository.UpsertAsync(credential);
-            ShowHiddenPasswords();
+            ShowHiddenHub();
         },
-        onBack: ShowHiddenPasswords));
+        onBack: ShowHiddenHub));
 
     public void ShowHiddenPhotos() => Navigate(AppRoute.HiddenPhotos, new PhotoVaultView(
-        _appState, ShowHiddenHub, _appState.HiddenPhotoVaultRepository, "Secret photos"));
+        _appState, ShowHiddenHub, _appState.HiddenPhotoVaultRepository));
 
     public void ShowHiddenNotes() => Navigate(AppRoute.HiddenNotes, new HiddenNotesView(_appState, onLock: ShowHiddenHub));
 

@@ -20,7 +20,7 @@
                 <Button Grid.Column="0" Content="&#128274;" Style="{StaticResource IconButtonStyle}" Click="Lock_Click" ToolTip="Lock" />
                 <TextBlock Grid.Column="1" Text="PassVault" Style="{StaticResource HeadlineTextStyle}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Button Grid.Column="2" Content="&#128247;" Style="{StaticResource IconButtonStyle}" Click="PhotoVault_Click" ToolTip="Photo vault" />
-                <Button Grid.Column="3" Content="&#9881;" Style="{StaticResource IconButtonStyle}" Click="Settings_Click" ToolTip="Settings" />
+                <Button x:Name="SettingsButton" Grid.Column="3" Content="&#9881;" Style="{StaticResource IconButtonStyle}" Click="Settings_Click" ToolTip="Settings" />
             </Grid>
         </Border>
 
